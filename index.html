@@ -10,6 +10,11 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="./css/index.css" />
 
     <!-- Compiled and minified JavaScript -->
@@ -22,11 +27,9 @@
     <h4 class="section">Melp</h4>
     <div class="divider"></div>
 
-    <div class="input-field col s12">
+    <div class="container input-field col s6">
       <select id="sorting_select">
-        <option value="asc-rating" disabled selected>
-          Choose the sorting option
-        </option>
+        <option value="" disabled selected>Choose the sorting option</option>
         <option value="asc-rating">ascending by rating</option>
         <option value="desc-rating">descending by rating</option>
         <option value="asc-alpha">ascending alphabetically</option>
@@ -34,6 +37,23 @@
       </select>
       <label>Sort Data</label>
     </div>
+
+    <div class="center" id="loading_icon">
+      <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row" id="data_container"></div>
   </body>
 </html>

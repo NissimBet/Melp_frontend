@@ -146,22 +146,31 @@ const loadedData = [
 ];
 
 const DATA_CONTAINER_ID = 'data_container';
+const LOADING_ICON_ID = 'loading_icon';
 
 /**
- *
+ * @return {*}
  */
 async function getData() {
-  const url =
-    'https://recruiting-datasets.s3.us-east-2.amazonaws.com/data_melp.json';
-  const response = await fetch('https://cors-anywhere.herokuapp.com/' + url, {
-    method: 'GET',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
-  return await response.json();
+  try {
+    document.getElementById(LOADING_ICON_ID).hidden = false;
+    const url =
+      'https://recruiting-datasets.s3.us-east-2.amazonaws.com/data_melp.json';
+    const response = await fetch('https://cors-anywhere.herokuapp.com/' + url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+    document.getElementById(LOADING_ICON_ID).hidden = true;
+    return await response.json();
+  } catch (err) {
+    document.getElementById(LOADING_ICON_ID).hidden = true;
+    console.log(err);
+    return [];
+  }
 }
 
 /**
@@ -183,6 +192,7 @@ function loadDataInto(data = [], id) {
 /**
  *
  * @param {*} cardData
+ * @return {*}
  */
 function createCard(cardData) {
   const container = document.createElement('div');
@@ -194,7 +204,7 @@ function createCard(cardData) {
   cardContent.classList.add('card-content', 'white-text');
   title.classList.add('card-title');
   title.innerText = cardData.name;
-  rating.innerText = cardData.rating;
+  rating.appendChild(createRating(cardData.rating));
 
   container.appendChild(cardContent);
   cardContent.appendChild(title);
@@ -205,11 +215,28 @@ function createCard(cardData) {
 
 /**
  *
+ * @param {*} rating
+ * @return {*}
+ */
+function createRating(rating = 0) {
+  const container = document.createElement('span');
+  container.className = 'container';
+  for (let i = 0; i <= 4; i++) {
+    const star = document.createElement('i');
+    star.innerText = i < rating ? 'star' : 'star_border';
+    star.className = 'material-icons';
+    container.appendChild(star);
+  }
+  return container;
+}
+
+/**
+ *
  * @param {*} event
  */
 function onSortSelectChange(event) {
   const sortMode = event.target.value;
-
+  document.getElementById(LOADING_ICON_ID).hidden = false;
   switch (sortMode) {
     case 'asc-rating':
       sortRating(true);
@@ -225,6 +252,7 @@ function onSortSelectChange(event) {
       break;
   }
 
+  document.getElementById(LOADING_ICON_ID).hidden = true;
   loadDataInto(loadedData, DATA_CONTAINER_ID);
 }
 
@@ -257,5 +285,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   sortingSelectInstance.el.onchange = onSortSelectChange;
 
   //   loadedData = await getData();
-  loadDataInto(loadedData, DATA_CONTAINER_ID);
+  //   loadDataInto(loadedData, DATA_CONTAINER_ID);
 });
