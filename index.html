@@ -24,30 +24,43 @@
     <title>Melp</title>
   </head>
   <body>
+    <div id="fb-root"></div>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0"
+      nonce="Pe9tpmMb"
+    ></script>
+
     <div class="container">
       <h4 class="section">Melp</h4>
     </div>
     <div class="divider"></div>
 
-    <div class="container row valign-wrapper">
-      <div class="input-field col s6">
-        <select id="sorting_select">
-          <option value="" disabled selected>Choose the sorting option</option>
-          <option value="asc-rating">ascending by rating</option>
-          <option value="desc-rating">descending by rating</option>
-          <option value="asc-alpha">ascending alphabetically</option>
-          <option value="desc-alpha">descending alphabetically</option>
-        </select>
-        <label>Sort Data</label>
-      </div>
+    <div class="container section">
+      <div class="row">
+        <div class="input-field col s12 m6 center">
+          <select id="sorting_select">
+            <option value="" disabled selected>
+              Choose the sorting option
+            </option>
+            <option value="asc-rating">Ascending by rating</option>
+            <option value="desc-rating">Descending by rating</option>
+            <option value="asc-alpha">Ascending alphabetically</option>
+            <option value="desc-alpha">Descending alphabetically</option>
+          </select>
+          <label>Sort Data</label>
+        </div>
 
-      <div class="switch col s6">
-        <label>
-          Tarjetas
-          <input type="checkbox" id="display_mode" />
-          <span class="lever"></span>
-          Tabla
-        </label>
+        <div class="switch col s12 m6 center">
+          <label>
+            Cards
+            <input type="checkbox" id="display_mode" />
+            <span class="lever"></span>
+            Table
+          </label>
+        </div>
       </div>
     </div>
 
