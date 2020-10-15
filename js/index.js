@@ -147,16 +147,21 @@ const loadedData = [
 
 const DATA_CONTAINER_ID = 'data_container';
 const LOADING_ICON_ID = 'loading_icon';
+const DISPLAY_SWITCH_ID = 'display_mode';
+const TABLE_CONTAINER = 'data_table';
 
 /**
- * @return {*}
+ * Function that fetches the data from the api
+ *
+ * @return {Promise<Array>}
  */
 async function getData() {
   try {
-    document.getElementById(LOADING_ICON_ID).hidden = false;
     const url =
       'https://recruiting-datasets.s3.us-east-2.amazonaws.com/data_melp.json';
-    const response = await fetch('https://cors-anywhere.herokuapp.com/' + url, {
+    const proxy = 'https://cors-anywhere.herokuapp.com/';
+    // use a proxy to call the api, preventing errors with CORS
+    const response = await fetch(proxy + url, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -164,19 +169,18 @@ async function getData() {
         'Access-Control-Allow-Origin': '*',
       },
     });
-    document.getElementById(LOADING_ICON_ID).hidden = true;
     return await response.json();
   } catch (err) {
-    document.getElementById(LOADING_ICON_ID).hidden = true;
     console.log(err);
     return [];
   }
 }
 
 /**
+ * Function that loads data into cards
  *
- * @param {*} data
- * @param {*} id
+ * @param {Array} data data to add into container element
+ * @param {string} id id of container element
  */
 function loadDataInto(data = [], id) {
   const container = document.getElementById(id);
@@ -190,9 +194,10 @@ function loadDataInto(data = [], id) {
 }
 
 /**
+ * Function that creates a Card HTML component, given data from the API
  *
- * @param {*} cardData
- * @return {*}
+ * @param {object} cardData data to use in card creation
+ * @return {HTMLDivElement} the container div of the Card
  */
 function createCard(cardData) {
   const container = document.createElement('div');
@@ -214,9 +219,10 @@ function createCard(cardData) {
 }
 
 /**
+ * Function that creates a star rating component
  *
- * @param {*} rating
- * @return {*}
+ * @param {number} rating rating of the restaurant
+ * @return {HTMLSpanElement}
  */
 function createRating(rating = 0) {
   const container = document.createElement('span');
@@ -231,8 +237,10 @@ function createRating(rating = 0) {
 }
 
 /**
+ * Function that reacts to changes of the select element.
+ * It chooses which sort function to call
  *
- * @param {*} event
+ * @param {Event} event event trigger call
  */
 function onSortSelectChange(event) {
   const sortMode = event.target.value;
@@ -254,11 +262,13 @@ function onSortSelectChange(event) {
 
   document.getElementById(LOADING_ICON_ID).hidden = true;
   loadDataInto(loadedData, DATA_CONTAINER_ID);
+  fillTableData(loadedData, TABLE_CONTAINER);
 }
 
 /**
+ * Function that sorts loadedData by rating
  *
- * @param {*} asc
+ * @param {boolean} asc if the sort is ascending or descending
  */
 function sortRating(asc = false) {
   loadedData.sort((a, b) => {
@@ -268,8 +278,9 @@ function sortRating(asc = false) {
 }
 
 /**
+ * Function that sorts loadedData by name
  *
- * @param {*} asc
+ * @param {boolean} asc if the sort is ascending or descending
  */
 function sortAlpha(asc = false) {
   loadedData.sort((a, b) => {
@@ -278,12 +289,89 @@ function sortAlpha(asc = false) {
   });
 }
 
+/**
+ * id: '851f799f-0852-439e-b9b2-df92c43e7672',
+    rating: 1,
+    name: 'Barajas, Bahena and Kano',
+    contact: {
+      site: 'https://federico.com',
+      email: 'Anita_Mata71@hotmail.com',
+      phone: '534 814 204',
+    },
+    address: {
+      street: '82247 Mariano Entrada',
+      city: 'Mérida Alfredotown',
+      state: 'Durango',
+      location: { lat: 19.440057053713137, lng: -99.12704709742486 },
+    },
+ */
+
+/**
+ *
+ * @param {*} data
+ * @param {*} id
+ * @return {*}
+ */
+function fillTableData(data, id = '') {
+  const tableContainer = document.getElementById(id);
+  const header = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  tableContainer.appendChild(header);
+  header.appendChild(headerRow);
+
+  const headers = ['name', 'rating', 'contact', 'address'];
+  for (const elem of headers) {
+    const tableData = document.createElement('th');
+    tableData.innerText = elem;
+    headerRow.appendChild(tableData);
+  }
+
+  const bodyRow = document.createElement('tbody');
+  for (const elem of data) {
+    const row = document.createElement('tr');
+    for (const header of headers) {
+      const tableData = document.createElement('td');
+      tableData.innerText = header;
+      row.appendChild(tableData);
+    }
+    bodyRow.appendChild(row);
+  }
+
+  tableContainer.appendChild(bodyRow);
+  return tableContainer;
+}
+
+/**
+ *
+ * @param {Event} event
+ */
+function switchView(event) {
+  console.log(event.target.checked);
+  const table = document.getElementById(TABLE_CONTAINER);
+  const cards = document.getElementById(DATA_CONTAINER_ID);
+  if (event.target.checked) {
+    table.hidden = false;
+    cards.hidden = true;
+  } else {
+    table.hidden = true;
+    cards.hidden = false;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const sortingSelect = document.getElementById('sorting_select');
   const sortingSelectInstance = M.FormSelect.init(sortingSelect);
-
   sortingSelectInstance.el.onchange = onSortSelectChange;
 
-  //   loadedData = await getData();
-  //   loadDataInto(loadedData, DATA_CONTAINER_ID);
+  document.getElementById(TABLE_CONTAINER).hidden = true;
+
+  const displaySwitch = document.getElementById(DISPLAY_SWITCH_ID);
+  displaySwitch.onchange = switchView;
+
+  document.getElementById(LOADING_ICON_ID).hidden = false;
+  //   loadedData.push(await getData());
+  document.getElementById(LOADING_ICON_ID).hidden = true;
+  loadDataInto(loadedData, DATA_CONTAINER_ID);
+  fillTableData(loadedData, TABLE_CONTAINER);
 });

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="./css/reset.css" />
+    <!-- <link rel="stylesheet" href="./css/reset.css" /> -->
     <!-- Compiled and minified CSS -->
     <link
       rel="stylesheet"
@@ -24,18 +24,31 @@
     <title>Melp</title>
   </head>
   <body>
-    <h4 class="section">Melp</h4>
+    <div class="container">
+      <h4 class="section">Melp</h4>
+    </div>
     <div class="divider"></div>
 
-    <div class="container input-field col s6">
-      <select id="sorting_select">
-        <option value="" disabled selected>Choose the sorting option</option>
-        <option value="asc-rating">ascending by rating</option>
-        <option value="desc-rating">descending by rating</option>
-        <option value="asc-alpha">ascending alphabetically</option>
-        <option value="desc-alpha">descending alphabetically</option>
-      </select>
-      <label>Sort Data</label>
+    <div class="container row valign-wrapper">
+      <div class="input-field col s6">
+        <select id="sorting_select">
+          <option value="" disabled selected>Choose the sorting option</option>
+          <option value="asc-rating">ascending by rating</option>
+          <option value="desc-rating">descending by rating</option>
+          <option value="asc-alpha">ascending alphabetically</option>
+          <option value="desc-alpha">descending alphabetically</option>
+        </select>
+        <label>Sort Data</label>
+      </div>
+
+      <div class="switch col s6">
+        <label>
+          Tarjetas
+          <input type="checkbox" id="display_mode" />
+          <span class="lever"></span>
+          Tabla
+        </label>
+      </div>
     </div>
 
     <div class="center" id="loading_icon">
@@ -54,6 +67,10 @@
       </div>
     </div>
 
-    <div class="row" id="data_container"></div>
+    <div class="row container" id="data_container"></div>
+
+    <div class="container">
+      <table id="data_table" class="highlight"></table>
+    </div>
   </body>
 </html>
